@@ -1,5 +1,5 @@
 ---
-title: "report"
+title: "The (Data) Science Behing Comedy College"
 author: "Jake Veatch"
 date: "9/3/2020"
 output: html_document
