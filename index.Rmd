@@ -3,25 +3,44 @@ title: "The (Data) Science Behing Comedy College"
 author: "Jake Veatch"
 date: "9/3/2020"
 output: html_document
----
+----
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+source("./workingFile.R", chdir = FALSE)
+library(tidyverse)
+
 ```
 
-## R Markdown
+# Project Summary
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This project was designed to analyze data from Comedy College, an Honors seminar course that teaches the science of comedy, and culminates with each student performing a standup to a live crowd.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+These standups were recorded, and I was able to spend a large amount of time watching, and collecting data from these standups. The following document serves to demonstrate the summary of the project size, as well as my most interesting finds.
 
-```{r cars}
-summary(cars)
+Everything on this page is dynamically generated. Any addition to the data files could be re-knit into a new document that would then include the added data.
+
+The analysis of this project was done using the R Programming Language. This document is generated using RMarkdown, which allows us to run R code, and embed the outputs into a simgle HTML, PDF, etc. documents. See more at https://rmarkdown.rstudio.com/ .
+
+### Total Time of Standups Analyzed (minutes)
+```{r totalTime}
+totalTime
 ```
 
-## Including Plots
+### Total Number of Comedians Analyzed
+```{r numComedians}
+comedianCount
+```
 
-You can also embed plots, for example:
+### Total Number of Semesters Analyzed
+```{r numSemesters}
+semestersCount
+```
+
+# Demographics
+
+The first area I wanted to study was the demographics of Comedy College. This involved asking questions such as who was taking the seminar, and did any of their physical characteristics correlate with other measures in their standups. For example did shirt color correlate with the average crowd response to their jokes? Did hair color correlate with the number of swear words used?
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
