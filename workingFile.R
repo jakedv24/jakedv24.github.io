@@ -53,3 +53,19 @@ uniqueSemesters <-
   summarise(n = n())
 
 semestersCount = nrow(uniqueSemesters)
+
+## ======= DEMOGRAPHICS =======
+
+# dominant handedness vs num comedians
+
+comedianAvgCrowdResponse <-
+  jokes %>%
+  group_by(set_id) %>%
+  summarize(avgResponse = mean(reaction))
+
+comedianAvgCrowdResponseAndDemographic <- merge(comedianAvgCrowdResponse, comedians, by.x = "set_id", by.y = "id")
+
+dominantHandVsCrowdResp <-
+  comedianAvgCrowdResponseAndDemographic %>%
+  group_by(dominant_hand) %>%
+  summarise(avgResponse = mean(avgResponse))

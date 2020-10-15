@@ -1,9 +1,9 @@
 ---
-title: "The (Data) Science Behing Comedy College"
+title: "The (Data) Science Behind Comedy College"
 author: "Jake Veatch"
 date: "9/3/2020"
 output: html_document
-----
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -41,6 +41,42 @@ semestersCount
 # Demographics
 
 The first area I wanted to study was the demographics of Comedy College. This involved asking questions such as who was taking the seminar, and did any of their physical characteristics correlate with other measures in their standups. For example did shirt color correlate with the average crowd response to their jokes? Did hair color correlate with the number of swear words used?
+
+## Dominant Hand
+
+How does the dominant hand affect comedy college?
+
+### Dominant Hand vs. Number of Comedians
+
+Are most comedians in the study left or right handed?
+
+```{r dominantHandVsComedians}
+ggplot(comedians) +
+  geom_bar(mapping = aes(x = dominant_hand, fill = dominant_hand)) +
+  labs(x = "Dominant Hand", fill = "Dominant Hand", y = "Number of Comedians")
+```
+
+Here we can see that overwhelmingly, the participants in this study are right-handed.
+
+## Dominant Hand vs. Average Crowd Response
+
+The average crowd response is the measure of the crowds reaction to a joke. It was measured on a scale of 1 to 10 for each joke.
+
+```{r dominantHandVsResponse}
+ggplot(dominantHandVsCrowdResp, aes(x = dominant_hand, y = avgResponse)) +
+  geom_point() +
+  geom_text(aes(label = avgResponse), vjust=0, hjust=1)
+```
+
+Clearly, the difference is marginal between lefties and righties.
+
+### Shirt Color by Comedian
+
+```{r shirtColorByComedian}
+ggplot(comedians) +
+  geom_bar(mapping = aes(x = shirt_color, fill = shirt_color)) +
+  labs(x = "Shirt Color", fill = "Shirt Color", y = "Number of Comedians")
+```
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
