@@ -17,6 +17,11 @@ jokes <-
     )
   )
 
+swear_word <- read_csv("swear_word.csv", 
+                       col_types = cols(timestamp = col_character()))
+
+callback <- read_csv("callback.csv", col_types = cols(timestamp = col_character(), 
+                                                      X6 = col_skip(), X7 = col_skip()))
 
 convertTimeToDecimal <- function(time) {
   minsAndSeconds <- str_split(time, ":")
@@ -63,9 +68,33 @@ comedianAvgCrowdResponse <-
   group_by(set_id) %>%
   summarize(avgResponse = mean(reaction))
 
-comedianAvgCrowdResponseAndDemographic <- merge(comedianAvgCrowdResponse, comedians, by.x = "set_id", by.y = "id")
+comedianNumJokes <-
+  jokes %>%
+  group_by(set_id) %>%
+  summarize(numJokes = n())
+
+comedianAvgCrowdResponseAndDemographic <- merge(comedianAvgCrowdResponse, comedians, by.x = "set_id", by.y = "id") %>%
+  merge(comedianNumJokes, by = "set_id")
 
 dominantHandVsCrowdResp <-
   comedianAvgCrowdResponseAndDemographic %>%
   group_by(dominant_hand) %>%
   summarise(avgResponse = mean(avgResponse))
+
+numberOfSwearWordsBySet <- 
+  swear_word %>%
+  group_by(set_id) %>%
+  summarise(numSwears = n())
+
+comedianAndNumberOfSwearWords <- merge(comedianAvgCrowdResponseAndDemographic, numberOfSwearWordsBySet, by.x = "set_id", by.y = "set_id", all.x = TRUE) %>%
+  replace_na(list(numSwears = 0))
+
+numCallbacksBySet <-
+  callback %>%
+  group_by(set_id) %>%
+  summarise(numCallbacks = n())
+
+comdianAndNumCallbacks <- merge(comedianAvgCrowdResponseAndDemographic, numCallbacksBySet, by.x = "set_id", by.y = "set_id", all.x = TRUE) %>%
+  replace_na(list(numCallbacks = 0))
+
+## ========== SWEARING =========

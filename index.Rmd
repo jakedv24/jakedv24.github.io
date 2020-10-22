@@ -61,7 +61,7 @@ ggplot(comedians) +
 
 Here we can see that overwhelmingly, the participants in this study are right-handed.
 
-## Dominant Hand vs. Average Crowd Response
+### Dominant Hand vs. Average Crowd Response
 
 The average crowd response is the measure of the crowds reaction to a joke. It was measured on a scale of 1 to 10 for each joke.
 
@@ -73,6 +73,41 @@ ggplot(dominantHandVsCrowdResp, aes(x = dominant_hand, y = avgResponse)) +
 
 Clearly, the difference is marginal between lefties and righties.
 
+### Dominant Hand and Number of Jokes
+
+Does handedness affect how many jokes a comedian tells?
+
+```{r numJokesByHand}
+ggplot(comdianAndNumCallbacks) +
+  geom_boxplot(mapping = aes(x = numJokes, y = dominant_hand))
+```
+
+The results are similar between the two groups. Right handers have a large data set and thus a larger range, but the average number of jokes told are pretty similar.
+
+### Dominant Hand and Number of Swear Words
+
+Does handedness affect the number of swear words?
+
+```{r numSwearWordsByDemographics}
+ggplot(comedianAndNumberOfSwearWords) +
+  geom_boxplot(mapping = aes(x = numSwears, y = dominant_hand))
+```
+
+Based on our data set, lefties swear more on average, but righties have a much higher upper-quartile, and a much larger range of values.
+
+### Dominant Hand and number of Callbacks
+
+Does handedness affect the number of callbacks that a comedian uses?
+
+```{r numCallbackByHand}
+ggplot(comdianAndNumCallbacks) +
+  geom_boxplot(mapping = aes(x = numCallbacks, y = dominant_hand))
+```
+
+Interestingly, the upper and lower quartiles are almost identical, but the average number of callbacks are off by 0.5 in favor of lefties.
+
+## Shirt Color
+
 ### Shirt Color by Comedian
 
 ```{r shirtColorByComedian}
@@ -81,8 +116,7 @@ ggplot(comedians) +
   labs(x = "Shirt Color", fill = "Shirt Color", y = "Number of Comedians")
 ```
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+# Swearing
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The goal of this section is to explore the affect that swearing has on our data. When does swearing occur in sets? Does it tend to occur more often in sooner/later jokes in sets? Does the crowd reaction change based on the presence of swearing in a joke? What swear words are our comedians using? Are there clear favorites?
+
