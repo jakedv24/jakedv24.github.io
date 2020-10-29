@@ -26,6 +26,10 @@ Everything on this page is dynamically generated. Any addition to the data files
 
 The analysis of this project was done using the R Programming Language. This document is generated using RMarkdown, which allows us to run R code, and embed the outputs into a simgle HTML, PDF, etc. documents. See more at https://rmarkdown.rstudio.com/ .
 
+## Crowd Response - Definition
+
+Crowd response is the single-most important measure in our study. It was a measure of the crowd response to a single joke from a scale of 1 (horrible joke, booing, complete silence) to 10 (extended clapping, laughing, cheering, etc.). This was chosen as a measure as it extracted any personal bias to a joke's "funniness". The collection of data was then more objective by simply measuring the reaction of the crowd.
+
 ### Total Time of Standups Analyzed (minutes)
 ```{r totalTime}
 totalTime
@@ -92,7 +96,7 @@ ggplot(avgResponseByNumCallbacks) +
 
 As we can see, the average crowd response for a joke containing one callback is significantly higher than jokes that contain no callbacks at all. Are comedians that use callbacks naturally funnier with crowds? Do crowds like to hear callbacks?
 
-## Callback Seperation with Original Joke
+## Callback Separation with Original Joke
 
 How many jokes away are callbacks from their original joke? Overlaid with the average crowd response by that callback distance.
 
@@ -146,6 +150,22 @@ ggplot(comedianAndNumberOfSwearWords, aes(x = numSwears, y = avgResponse)) +
 
 Interestingly enough, the increase in the number of swear words does indeed increase the average response slightly. The response is an average of ~5.5 with zero swearing and ~6.7 with 10 instances of swearing. We don't know the exact relation, perhaps comedians that tend to swear feel more comfortable on stage and therefore have better joke delivery skills.
 
+## Number of Swears vs. Average Crowd Response Including Sex
+
+How does the crowd response to jokes relate to the total number of swear words in a set, while separating into male and female groups?
+
+```{r numSwearWordsByCrwdRespoGender}
+ggplot() +
+  geom_point(maleComedianSwears, mapping = aes(x = numSwears, y = avgResponse, color = "Male")) +
+  geom_smooth(maleComedianSwears, se = FALSE, mapping = aes(x = numSwears, y = avgResponse, color = "Male"), method = "glm") +
+  geom_point(femaleComedianSwears, mapping = aes(x = numSwears, y = avgResponse, color = "Female")) +
+  geom_smooth(femaleComedianSwears, se = FALSE, mapping = aes(x = numSwears, y = avgResponse, color = "Female"), method = "glm") +
+  scale_color_manual(name = "Sex", breaks = c("Male", "Female"), values = c("Male" = "red", "Female" = "blue"))
+```
+
+We can see that the number of swears used is increased in males in our study versus the females. Males went all the way up to ten, while females stopped at six swear words in a set. Male swears also appeared to increase the average crowd response to the set at a larger rate versus their female counterparts.
+
+
 ## Swear Density by Number of Joke in Set
 
 How do swear words spread out through a set? Are they more dense in certain parts such as near the end of the set?
@@ -156,7 +176,6 @@ ggplot(swearWordCountByNumberInSet, aes(x = joke_number_in_set, y = totalSwearsF
   geom_smooth(method = "loess", mapping = aes(x = joke_number_in_set, y = avgResponse, color = "Average Response")) +
   geom_smooth(method = "loess", aes(color = "Swear Words Per Jokes")) + 
   scale_color_manual(name = "Line Data", breaks = c("Average Response", "Swear Words Per Jokes"), values = c("Average Response" = "red", "Swear Words Per Jokes" = "blue"))
-
 ```
 
 Based on our data set, we can see that the frequency of swearing actually occurs near the beginning of the set within the first ten jokes and quickly reduces as the number of jokes increases. Perhaps comedians are swearing more frequently due to stress, or to be more informal and personal with the audience.
@@ -244,9 +263,34 @@ Interestingly, the upper and lower quartiles are almost identical, but the avera
 
 ### Shirt Color by Comedian
 
+What is the distribution of shirt color chosen by the comedians?
+
 ```{r shirtColorByComedian}
 ggplot(comedians) +
   geom_bar(mapping = aes(x = shirt_color, fill = shirt_color)) +
   labs(x = "Shirt Color", fill = "Shirt Color", y = "Number of Comedians")
 ```
 
+### Shirt Color vs Crowd Response
+
+How does shirt color affect the average crowd response?
+
+```{r shirtColorByComedianAndDemo}
+ggplot(shirtColorVsAvgResp) +
+  geom_point(mapping = aes(x = shirt_color, y = avgResponse)) +
+  labs(x = "Shirt Color", y = "Average Crowd Response")
+```
+
+In our study, brown and yellow significantly outperform shirts of other colors, while checkered shirts perform worst on average.
+
+## Sex vs. Average Crowd Response
+
+How does the sex of our comedians affect the average crowd response?
+
+```{r sexAvgResp}
+ggplot(genderComedianAvgResponse) +
+  geom_point(mapping = aes(x = sex, y = avgResponse)) +
+  labs(x = "Sex", y = "Average Crowd Response")
+```
+
+The male participants in our study outperformed the females on average by ~0.3 in crowd reaction.

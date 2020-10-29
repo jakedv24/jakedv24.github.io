@@ -84,6 +84,16 @@ comedianNumJokes <-
 comedianAvgCrowdResponseAndDemographic <- merge(comedianAvgCrowdResponse, comedians, by.x = "set_id", by.y = "id") %>%
   merge(comedianNumJokes, by = "set_id")
 
+genderComedianAvgResponse <-
+  comedianAvgCrowdResponseAndDemographic %>%
+  group_by(sex) %>%
+  summarise(avgResponse = mean(avgResponse))
+
+shirtColorVsAvgResp <-
+  comedianAvgCrowdResponseAndDemographic %>%
+  group_by(shirt_color) %>%
+  summarise(avgResponse = mean(avgResponse))
+
 dominantHandVsCrowdResp <-
   comedianAvgCrowdResponseAndDemographic %>%
   group_by(dominant_hand) %>%
@@ -96,6 +106,14 @@ numberOfSwearWordsBySet <-
 
 comedianAndNumberOfSwearWords <- merge(comedianAvgCrowdResponseAndDemographic, numberOfSwearWordsBySet, by.x = "set_id", by.y = "set_id", all.x = TRUE) %>%
   replace_na(list(numSwears = 0))
+
+maleComedianSwears <-
+  comedianAndNumberOfSwearWords %>%
+  subset(sex == "male")
+
+femaleComedianSwears <-
+  comedianAndNumberOfSwearWords %>%
+  subset(sex == "female")
 
 numCallbacksBySet <-
   callback %>%
