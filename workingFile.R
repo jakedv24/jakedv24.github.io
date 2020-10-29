@@ -7,7 +7,7 @@ jokes <-
   read_csv(
     "jokes.csv",
     col_types = cols(
-      number_in_set = col_integer(),
+      joke_number_in_set = col_integer(),
       set_id = col_integer(),
       start_time = col_character(),
       end_time = col_character(),
@@ -37,8 +37,16 @@ convertTimeToDecimal <- function(time) {
 ## transmute must use group by otherwise it will be global to the list avg.
 jokesWithTimes <-
   jokes %>% 
-  group_by(set_id, number_in_set) %>% 
-  transmute(startTime = convertTimeToDecimal(start_time), endTime = convertTimeToDecimal(end_time))
+  group_by(set_id, joke_number_in_set) %>% 
+  mutate(startTime = convertTimeToDecimal(start_time), endTime = convertTimeToDecimal(end_time)) %>%
+  mutate(totalTime = (endTime - startTime))
+
+avgJokeTime <- mean(jokesWithTimes$totalTime)
+
+setWithNumJokes <-
+  jokesWithTimes %>%
+  group_by(set_id) %>%
+  summarize(numJokes = n())
 
 totalSetTimes <-
   jokesWithTimes %>%
@@ -98,3 +106,27 @@ comdianAndNumCallbacks <- merge(comedianAvgCrowdResponseAndDemographic, numCallb
   replace_na(list(numCallbacks = 0))
 
 ## ========== SWEARING =========
+
+swearWordCountByJoke <-
+  swear_word %>%
+  group_by(set_id, joke_number_in_set) %>%
+  summarise(numSwearsInJoke = n())
+
+jokesWithSwearCount <- merge(swearWordCountByJoke, jokes, all.y = TRUE) %>%
+  replace_na(list(numSwearsInJoke = 0))
+
+avgResponseByJokeNumberInSet <-
+  jokes %>%
+  group_by(joke_number_in_set) %>%
+  summarise(avgResponse = mean(reaction))
+
+swearWordCountByNumberInSet <-
+  jokesWithSwearCount %>%
+  group_by(joke_number_in_set) %>%
+  summarise(totalSwearsForNumberInSet = sum(numSwearsInJoke)) %>%
+  merge(avgResponseByJokeNumberInSet)
+
+swearWords <-
+  swear_word %>%
+  group_by(word) %>%
+  summarise(count = n())

@@ -41,9 +41,102 @@ comedianCount
 semestersCount
 ```
 
+# Jokes
+
+The goal of this section is to explore the jokes in the most generic way. How many jokes are told on average per set? What is the average length of the jokes in minutes? 
+
+## Jokes per Set
+
+How many jokes are told per set?
+
+```{r numJokesPerSet}
+ggplot(setWithNumJokes) +
+  geom_histogram(mapping = aes(x = numJokes), binwidth=.5) +
+    geom_vline(aes(xintercept=mean(numJokes)), color="blue", linetype="dashed", size=1)
+```
+
+The average number of jokes told per set is around 14, with the largest number of comedians telling 11 jokes.
+
+## Average Length of a Joke
+
+What is the average length of a joke told by our comedians (in minutes)?
+
+```{r avgJokeTime}
+avgJokeTime
+```
+
+## Length of Joke vs Crowd Reaction
+
+How does the length of time for a joke to finish relate to the crowd reaction to that joke?
+
+```{r lengthJokeVsReaction}
+ggplot(jokesWithTimes, aes(x = reaction, y = totalTime)) +
+  geom_point() +
+  geom_smooth(method = "glm")
+```
+
+As we can see, the length of the jokes are not particularly effective in changing the crowds reaction.
+
+# Swearing
+
+The goal of this section is to explore the affect that swearing has on our data. When does swearing occur in sets? Does it tend to occur more often in sooner/later jokes in sets? Does the crowd reaction change based on the presence of swearing in a joke? What swear words are our comedians using? Are there clear favorites?
+
+## Distribution of Swearing in a Set
+
+What is the distribution for the number of times that comedians swore in their sets.?
+
+```{r numSwearWordsBySet}
+ggplot(comedianAndNumberOfSwearWords) +
+  geom_histogram(mapping = aes(x = numSwears), binwidth=.5) +
+  geom_vline(aes(xintercept=mean(numSwears)), color="blue", linetype="dashed", size=1)
+```
+
+We can see that a large number of comedians used zero swear words, while some comedians went up to ten. The average number is just shy of 2.5 swear words per set.
+
+## Number of Swears vs. Average Crowd Response
+
+How does the crowd response to jokes relate to the total number of swear words in a set?
+
+```{r numSwearWordsByCrwdRespo}
+ggplot(comedianAndNumberOfSwearWords, aes(x = numSwears, y = avgResponse)) +
+  geom_point() +
+  geom_smooth(method = "glm")
+```
+
+Interestingly enough, the increase in the number of swear words does indeed increase the average response slightly. The response is an average of ~5.5 with zero swearing and ~6.7 with 10 instances of swearing. We don't know the exact relation, perhaps comedians that tend to swear feel more comfortable on stage and therefore have better joke delivery skills.
+
+## Swear Density by Number of Joke in Set
+
+How do swear words spread out through a set? Are they more dense in certain parts such as near the end of the set?
+
+```{r densitySwearWords}
+ggplot(swearWordCountByNumberInSet, aes(x = joke_number_in_set, y = totalSwearsForNumberInSet)) +
+  geom_point() +
+  geom_smooth(method = "loess", mapping = aes(x = joke_number_in_set, y = avgResponse, color = "Average Response")) +
+  geom_smooth(method = "loess", aes(color = "Swear Words Per Jokes")) + 
+  scale_color_manual(name = "Line Data", breaks = c("Average Response", "Swear Words Per Jokes"), values = c("Average Response" = "red", "Swear Words Per Jokes" = "blue"))
+
+```
+
+Based on our data set, we can see that the frequency of swearing actually occurs near the beginning of the set within the first ten jokes and quickly reduces as the number of jokes increases. Perhaps comedians are swearing more frequently due to stress, or to be more informal and personal with the audience.
+
+I also overlay the average response for that number of joke in the set to show how it might be affected by the number of swears for jokes of that order in a set. It stays relatively stable across the differences in swearing.
+
+## Swear Word Choice **Use of Bad Language in This Section**
+
+WATCH YOUR LANGUAGE! What words did our comedians choose to use in their foul jokes?
+
+```{r numWordsBySwear}
+ggplot(swearWords) +
+  geom_bar(stat = "identity", mapping = aes(x = word, y = count)) +
+  coord_flip()
+```
+
+Clearly there are some favorites!
+
 # Demographics
 
-The first area I wanted to study was the demographics of Comedy College. This involved asking questions such as who was taking the seminar, and did any of their physical characteristics correlate with other measures in their standups. For example did shirt color correlate with the average crowd response to their jokes? Did hair color correlate with the number of swear words used?
+This section involved asking questions such as who was taking the seminar, and did any of their physical characteristics correlate with other measures in their standups. For example did shirt color correlate with the average crowd response to their jokes? Did hair color correlate with the number of swear words used?
 
 ## Dominant Hand
 
@@ -115,8 +208,4 @@ ggplot(comedians) +
   geom_bar(mapping = aes(x = shirt_color, fill = shirt_color)) +
   labs(x = "Shirt Color", fill = "Shirt Color", y = "Number of Comedians")
 ```
-
-# Swearing
-
-The goal of this section is to explore the affect that swearing has on our data. When does swearing occur in sets? Does it tend to occur more often in sooner/later jokes in sets? Does the crowd reaction change based on the presence of swearing in a joke? What swear words are our comedians using? Are there clear favorites?
 
