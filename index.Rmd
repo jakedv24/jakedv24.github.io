@@ -77,6 +77,47 @@ ggplot(jokesWithTimes, aes(x = reaction, y = totalTime)) +
 
 As we can see, the length of the jokes are not particularly effective in changing the crowds reaction.
 
+# Callbacks
+
+This section focuses on callbacks in a standup. A callback in comedy is when a comedian will relate the joke in some way to a previous joke in the set. Do callbacks get a better crowd reaction than jokes without callbacks? How many jokes apart are callbacks with their original joke? How many times are callbacks used off of the same original joke?
+
+## Callback vs Non-Callback Joke Reactions
+
+How do jokes that use callbacks measure up with the crowd reaction of jokes that do not make callbacks?
+
+```{r avgResponseByNumCallbacks}
+ggplot(avgResponseByNumCallbacks) +
+  geom_point(mapping = aes(x = numCallbacks, y = avgResponse))
+```
+
+As we can see, the average crowd response for a joke containing one callback is significantly higher than jokes that contain no callbacks at all. Are comedians that use callbacks naturally funnier with crowds? Do crowds like to hear callbacks?
+
+## Callback Seperation with Original Joke
+
+How many jokes away are callbacks from their original joke? Overlaid with the average crowd response by that callback distance.
+
+```{r distanceCallbackWithResponse}
+ggplot(distanceCallbackWithResponse) +
+  geom_histogram(mapping = aes(x = callbackDistance), binwidth=.5) +
+  geom_vline(aes(xintercept=mean(callbackDistance)), color="blue", linetype="dashed", size=1) +
+  geom_point(data = avgResponseCallbackDist, aes(x = callbackDistance, y = avgResponse, color = "Average Crowd Response")) +
+  scale_color_manual(name = "", breaks = c("Average Crowd Response"), values = c("Average Crowd Response" = "red"))
+```
+
+Here we can see that the most used callback distance is actually one joke away. The average callback distance is ~5 jokes away. We can see the overlaid average crowd response performing the best on average with higher distances from the original joke.
+
+## Callback Numbers by Original Joke
+
+How many times are callbacks recycled during a set on a particular root joke?
+
+```{r numCallbacksByRootJoke}
+ggplot(numCallbacksByRootJoke) +
+  geom_histogram(mapping = aes(x = numCallbacksByRoot), binwidth=.5) +
+  geom_vline(aes(xintercept=mean(numCallbacksByRoot)), color="blue", linetype="dashed", size=1)
+```
+
+We can observe that overwhelmingly, callbacks are used only once that relate back to an original joke. There are some instances of using the callback up to three times.
+
 # Swearing
 
 The goal of this section is to explore the affect that swearing has on our data. When does swearing occur in sets? Does it tend to occur more often in sooner/later jokes in sets? Does the crowd reaction change based on the presence of swearing in a joke? What swear words are our comedians using? Are there clear favorites?

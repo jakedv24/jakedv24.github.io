@@ -130,3 +130,32 @@ swearWords <-
   swear_word %>%
   group_by(word) %>%
   summarise(count = n())
+
+## ========= CALLBACKS =========
+
+numCallbacksPerJoke <-
+  callback %>%
+  group_by(set_id, from_joke) %>%
+  summarise(numCallbacks = n()) %>%
+  merge(jokesWithTimes, by.x = c("set_id", "from_joke"), by.y = c("set_id", "joke_number_in_set"), all.y = TRUE) %>%
+  replace_na(list(numCallbacks = 0))
+
+avgResponseByNumCallbacks <-
+  numCallbacksPerJoke %>%
+  group_by(numCallbacks) %>%
+  summarise(avgResponse = mean(reaction))
+
+distanceCallbackWithResponse <-
+  callback %>%
+  mutate(callbackDistance = (from_joke - to_joke)) %>%
+  merge(jokesWithTimes, by.x = c("set_id", "from_joke"), by.y = c("set_id", "joke_number_in_set"))
+
+avgResponseCallbackDist <-
+  distanceCallbackWithResponse %>%
+  group_by(callbackDistance) %>%
+  summarise(avgResponse = mean(reaction))
+
+numCallbacksByRootJoke <-
+  callback %>%
+  group_by(set_id, to_joke) %>%
+  summarise(numCallbacksByRoot = n())
